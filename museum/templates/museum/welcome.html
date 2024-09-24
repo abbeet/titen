@@ -1,0 +1,12 @@
+<!-- museum/templates/museum/welcome.html -->
+
+{% extends 'museum/base.html' %}
+
+{% block content %}
+  <h2>Welcome to the TITEN (Teknologi Identifikasi dan Tracking Eksplorasi Nangtung)</h2>
+  <p>This application allows you to detect and tracking visitor interest in your museum.</p>
+  <ul>
+    <li><a href="{% url 'signup' %}">Signup</a></li>
+    <li><a href="{% url 'login' %}">Login</a></li>
+  </ul>
+{% endblock %}

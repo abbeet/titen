@@ -1,0 +1,12 @@
+<!-- museum/templates/museum/add_cctv_footages.html -->
+
+{% extends 'museum/base.html' %}
+
+{% block content %}
+  <h2>Add CCTV Footages</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Footages</button>
+  </form>
+{% endblock %}

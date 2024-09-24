@@ -1,0 +1,121 @@
+<!-- museum/templates/museum/draw_roi.html -->
+
+{% extends 'museum/base.html' %}
+{% load static %}
+
+{% block content %}
+<h2>Draw ROI for Feed {{ feed.id }}</h2>
+<div id="videoContainer" style="position: relative; display: inline-block;">
+    <img id="frameImage" src="{{ frame_path }}" alt="First Frame" style="display: block; width: 100%;">
+    <canvas id="canvasElement" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></canvas>
+</div>
+<br>
+<input type="text" id="roiLabelInput" placeholder="Enter ROI label" style="margin-bottom: 10px;">
+<button id="clearButton" style="margin-right: 10px;">Clear All Polygons</button>
+<button id="saveRoiButton">Save ROIs</button>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const img = document.getElementById('frameImage');
+        const canvas = document.getElementById('canvasElement');
+        const ctx = canvas.getContext('2d');
+        const clearButton = document.getElementById('clearButton');
+        const saveButton = document.getElementById('saveRoiButton');
+        const roiLabelInput = document.getElementById('roiLabelInput');
+
+        let polygons = [];
+        let currentPolygon = [];
+        let isDrawing = true;
+
+        img.onload = function() {
+            // Set canvas size to the original image size
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+
+            // Draw the image on the canvas
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        };
+
+        canvas.addEventListener('click', function(event) {
+            if (!isDrawing) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const x = (event.clientX - rect.left) * (canvas.width / rect.width);
+            const y = (event.clientY - rect.top) * (canvas.height / rect.height);
+
+            currentPolygon.push({ x, y });
+
+            drawPolygons();
+        });
+
+        canvas.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+
+            if (currentPolygon.length > 2) {
+                const label = roiLabelInput.value || `ROI_${polygons.length + 1}`;
+                polygons.push({ points: currentPolygon, label: label });
+                currentPolygon = [];
+                roiLabelInput.value = ''; // Clear the input field
+                drawPolygons();
+            }
+        });
+
+        clearButton.addEventListener('click', function() {
+            polygons = [];
+            currentPolygon = [];
+            drawPolygons();
+        });
+
+        saveButton.addEventListener('click', function() {
+            let coordsString = polygons.map(polygon => `${polygon.label}:${polygon.points.map(coord => `${coord.x},${coord.y}`).join(';')}`).join('|');
+            console.log('Saving ROIs:', coordsString);  // Debugging step to check coordinates
+            fetch("{% url 'draw_roi' feed.id %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: `coordinates=${coordsString}`
+            }).then(response => {
+                if (response.ok) {
+                    alert('ROI saved successfully');
+                } else {
+                    alert('Failed to save ROI');
+                    console.error('Error:', response.statusText);  // Debugging step to check the response
+                }
+            }).catch(error => {
+                console.error('Error:', error);  // Debugging step to catch any errors
+            });
+        });
+
+        function drawPolygons() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            polygons.forEach((polygon, index) => {
+                if (polygon.points.length > 0) {
+                    ctx.beginPath();
+                    ctx.moveTo(polygon.points[0].x, polygon.points[0].y);
+                    polygon.points.forEach(point => ctx.lineTo(point.x, point.y));
+                    ctx.closePath();
+                    ctx.stroke();
+
+                    // Draw label
+                    const labelX = polygon.points[0].x;
+                    const labelY = polygon.points[0].y - 5;
+                    ctx.fillStyle = 'red';
+                    ctx.font = '12px Arial';
+                    ctx.fillText(polygon.label, labelX, labelY);
+                }
+            });
+
+            if (currentPolygon.length > 0) {
+                ctx.beginPath();
+                ctx.moveTo(currentPolygon[0].x, currentPolygon[0].y);
+                currentPolygon.forEach(point => ctx.lineTo(point.x, point.y));
+                ctx.stroke();
+            }
+        }
+    });
+</script>
+{% endblock %}

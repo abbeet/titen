@@ -1,0 +1,12 @@
+<!-- museum/templates/museum/add_rooms.html -->
+
+{% extends 'museum/base.html' %}
+
+{% block content %}
+  <h2>Add Rooms</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Room</button>
+  </form>
+{% endblock %}

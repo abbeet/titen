@@ -1,0 +1,22 @@
+<!-- museum/templates/museum/dashboard.html -->
+
+{% extends 'museum/base.html' %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% endblock %}
+
+{% block content %}
+  <h2>Dashboard</h2>
+  <p>Welcome, {{ user.username }}!</p>
+  <ul>
+    <li><a href="{% url 'add_museum' %}">Add Museum</a></li>
+    <li><a href="{% url 'add_rooms' %}">Add Museum Rooms</a></li>
+    <li><a href="{% url 'add_cctv_feed' %}">Add CCTV Feed</a></li>
+    <li><a href="{% url 'add_cctv_footages' %}">Add CCTV Footages</a></li>
+    <li><a href="{% url 'list_cctv' %}">Draw ROI to CCTV Feed</a></li>
+    <li><a href="{% url 'run_detection' %}">Run Detection and Tracking</a></li>
+    <li><a href="{% url 'view_results' %}">View Results</a></li>
+  </ul>
+{% endblock %}

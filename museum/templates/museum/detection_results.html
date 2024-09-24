@@ -1,0 +1,19 @@
+<!-- museum/templates/museum/detection_results.html -->
+
+{% extends 'museum/base.html' %}
+
+{% block content %}
+  <h2>Detection Results</h2>
+  <ul>
+    {% for result in results %}
+      <li>{{ result.name }}: Count: {{ result.counts }}, Total: {{ result.total_counts }}, Long Stay: {{ result.long_stay_counts }}</li>
+    {% endfor %}
+  </ul>
+  
+  <h2>Timestamps</h2>
+  <ul>
+    {% for timestamp in timestamps %}
+      <li>{{ timestamp }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

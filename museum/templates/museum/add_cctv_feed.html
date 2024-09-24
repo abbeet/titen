@@ -1,0 +1,12 @@
+<!-- museum/templates/museum/add_cctv_feed.html -->
+
+{% extends 'museum/base.html' %}
+
+{% block content %}
+  <h2>Add CCTV Feed</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Feed</button>
+  </form>
+{% endblock %}

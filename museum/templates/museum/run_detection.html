@@ -1,0 +1,86 @@
+<!-- museum/templates/museum/run_detection.html -->
+
+{% extends 'museum/base.html' %}
+
+{% block content %}
+  <h2>Run Detection and Tracking</h2>
+  <form id="detectionForm" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="room_id">Select Room:</label>
+    <select name="room_id" id="room_id">
+      <option value="">Select a room</option>
+      {% for room in rooms %}
+        <option value="{{ room.id }}">{{ room.room_name }}</option>
+      {% endfor %}
+    </select>
+    <br>
+    <label for="feed_id">Select CCTV Feed:</label>
+    <select name="feed_id" id="feed_id">
+      <option value="">Select a feed</option>
+    </select>
+    <br>
+    <label for="footage_id">Select Footage:</label>
+    <select name="footage_id" id="footage_id">
+      <option value="">Select a footage</option>
+    </select>
+    <br>
+    <button type="submit">Run Detection</button>
+  </form>
+  <hr>
+  <h3>Video Stream:</h3>
+  <div id="videoContainer">
+    <img id="videoStream" src="" alt="Video Stream" style="width:100%;">
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const roomSelect = document.getElementById('room_id');
+        const feedSelect = document.getElementById('feed_id');
+        const footageSelect = document.getElementById('footage_id');
+        const form = document.getElementById('detectionForm');
+        const videoStream = document.getElementById('videoStream');
+
+        roomSelect.addEventListener('change', function() {
+            const roomId = this.value;
+            if (roomId) {
+                fetch(`/api/get_feeds_and_footages/?room_id=${roomId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Populate feeds
+                        feedSelect.innerHTML = '<option value="">Select a feed</option>';
+                        data.feeds.forEach(feed => {
+                            const option = document.createElement('option');
+                            option.value = feed.id;
+                            option.textContent = feed.cctv_name;
+                            feedSelect.appendChild(option);
+                        });
+
+                        // Populate footages
+                        footageSelect.innerHTML = '<option value="">Select a footage</option>';
+                        data.footages.forEach(footage => {
+                            const option = document.createElement('option');
+                            option.value = footage.id;
+                            option.textContent = footage.video_file;
+                            footageSelect.appendChild(option);
+                        });
+                    });
+            }
+        });
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const feedId = feedSelect.value;
+            const footageId = footageSelect.value;
+            let url = '';
+            if (feedId) {
+                url = `/stream_video/${feedId}/`;
+            } else if (footageId) {
+                url = `/stream_video/footage/${footageId}/`;
+            } else {
+                alert('Please select a feed or footage.');
+                return;
+            }
+            videoStream.src = url;
+        });
+    });
+  </script>
+{% endblock %}

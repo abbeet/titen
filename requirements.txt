@@ -1,0 +1,9 @@
+Django==5.0.6
+easyocr==1.7.1
+numpy==2.1.0
+opencv_python==4.10.0.84
+opencv_python_headless==4.10.0.84
+psutil==5.9.8
+Shapely==2.0.6
+torch==2.2.2+cu121
+ultralytics==8.2.77

@@ -1,0 +1,20 @@
+<!-- museum/templates/museum/list_cctv.html -->
+
+{% extends 'museum/base.html' %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+  <h2>Select CCTV Feed to Draw ROI</h2>
+  <ul>
+    {% for feed in feeds %}
+    <li>
+      {{ feed.cctv_name }} - Room: {{ feed.room_name.room_name }}
+      <a href="{% url 'draw_roi' feed.id %}">Draw ROI</a>
+    </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

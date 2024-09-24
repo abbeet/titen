@@ -1,0 +1,88 @@
+/* museum/static/css/base.css */
+
+body {
+    background-color: #f0f2f5;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background-color: #343a40;
+    color: white;
+    padding: 10px 0;
+}
+
+header a {
+    color: white;
+}
+
+header a:hover {
+    color: #d1d1d1;
+}
+
+#logo-text {
+    color: #007bff; /* Updated color to a more appealing blue */
+    font-weight: bold; /* Add font weight for emphasis */
+}
+
+.container {
+    flex: 1;
+    margin-top: 20px;
+}
+
+main {
+    margin-top: 20px;
+}
+
+.footer {
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
+}
+
+.footer .text-muted {
+    color: #6c757d !important;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.card-header {
+    background-color: #007bff; /* Updated color to a more appealing blue */
+    color: white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 10px; /* Add padding for better spacing */
+}
+
+.card-body {
+    padding: 30px;
+}
+
+.form-control {
+    border-radius: 5px;
+    box-shadow: none;
+    border: 1px solid #ced4da;
+    padding: 8px; /* Add padding for better spacing */
+}
+
+.form-control:focus {
+    border-color: #007bff; /* Updated color to a more appealing blue */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Updated color to a more appealing blue */
+}
+
+.btn-primary {
+    background-color: #007bff; /* Updated color to a more appealing blue */
+    border-color: #007bff; /* Updated color to a more appealing blue */
+    border-radius: 5px;
+    padding: 8px 16px; /* Add padding for better spacing */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Updated color to a darker shade of blue */
+    border-color: #0056b3; /* Updated color to a darker shade of blue */
+}
